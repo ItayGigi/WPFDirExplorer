@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFDirExplorer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="362" Width="394" ShowInTaskbar="False">
+        Title="MainWindow" Height="362" Width="394">
     <Window.Background>
         <SolidColorBrush Opacity="1" Color="#FFFFBFBF"/>
     </Window.Background>
