@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -31,7 +32,9 @@ namespace WPFDirExplorer
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)] public static extern int GetWindowLong(IntPtr hwnd, int index);
 
         private BackgroundWorker _eventListener;
-        string _gameFolder = "C:\\Users\\Itay\\Desktop\\Game";
+        public string GameFolder = "C:\\Users\\Itay\\Desktop\\Game";
+        public string GameRefFolder = String.Empty;
+        public string CaseName;
 
         ControlWindow _window;
 
@@ -144,10 +147,14 @@ namespace WPFDirExplorer
                     if (selectedItems.Item(0) != lastItem)
                     {
                         lastItem = selectedItems.Item(0);
-                        Dispatcher.Invoke(() =>
+                        try
                         {
-                            _window.OnSelectItem(lastItem);
-                        });
+                            Dispatcher.Invoke(() =>
+                            {
+                                _window.OnSelectItem(lastItem);
+                            });
+                        }
+                        catch (Exception) { }
                     }
                 }
                 else
@@ -177,7 +184,7 @@ namespace WPFDirExplorer
                 {
                     Folder folder = ((IShellFolderViewDual2)window.Document).Folder;
                     string path = ((Folder3)folder).Self.Path;
-                    if (!path.StartsWith(_gameFolder)) continue;
+                    if (!path.StartsWith(GameFolder)) continue;
 
                     if (hwnd == (IntPtr)window.HWND) gameWindow = window;
 
@@ -207,6 +214,32 @@ namespace WPFDirExplorer
             var interopHelper = new WindowInteropHelper(window);
             int exStyle = GetWindowLong(interopHelper.Handle, GWL_EXSTYLE);
             SetWindowLong(interopHelper.Handle, GWL_EXSTYLE, exStyle | WS_EX_LAYERED | WS_EX_TOOLWINDOW);
+        }
+
+        public void GenerateGame()
+        {
+            string exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string zipPath = exePath + @"\Cases\1.zip";
+            GameRefFolder = exePath + @"\Cases\1\";
+            System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, GameRefFolder);
+
+            CaseName = Path.GetFileName(Directory.GetDirectories(GameRefFolder)[0]);
+            string casePath = Path.Combine(GameFolder, CaseName);
+
+            if (Directory.Exists(casePath)) Directory.Delete(casePath, true);
+
+            System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, GameFolder);
+
+            File.Delete(casePath + @"\StartingClue.txt");
+
+            foreach (string path in Directory.EnumerateFiles(casePath, "", SearchOption.AllDirectories))
+            {
+                if (Path.GetFileName(path).EndsWith(" (Locked)"))
+                {
+                    File.WriteAllText(path, string.Empty);
+                    File.Delete(path.Remove(path.Length- " (Locked)".Length));
+                }
+            }
         }
     }
 }

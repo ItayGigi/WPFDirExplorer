@@ -25,7 +25,7 @@ namespace WPFDirExplorer
 		{
 			InitializeComponent();
 
-            string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "/StartingClue.txt";
+            string path = Directory.GetDirectories(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\Cases\1")[0] + @"\StartingClue.txt";
 
 			string text = File.ReadAllText(path);
 			parseToTextBlock(text, textBlock);
