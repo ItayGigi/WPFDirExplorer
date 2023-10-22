@@ -53,7 +53,7 @@ namespace WPFDirExplorer
 			{
 				lockedCanvas.Visibility = Visibility.Visible;
 				_lockedFileContent = File.ReadAllLines(((App)Application.Current).GameRefFolder + item.Path.Substring(((App)Application.Current).GameFolder.Length));
-				hintLabel.Content = "Hint To Myself: " + _lockedFileContent[0];
+				hintLabel.Content = "Saved hint: " + _lockedFileContent[0];
 			}
 			else
 			{
