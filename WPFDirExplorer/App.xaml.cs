@@ -1,4 +1,5 @@
-﻿using SHDocVw;
+﻿using Microsoft.Win32;
+using SHDocVw;
 using Shell32;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Media3D;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Diagnostics;
 
 namespace WPFDirExplorer
 {
@@ -40,6 +43,23 @@ namespace WPFDirExplorer
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            MainWindow = new ExitWindow();
+            MainWindow.Show();
+
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = "C:\\Users";
+            dialog.IsFolderPicker = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                GameFolder = dialog.FileName;
+                MessageBox.Show("You selected: " + dialog.FileName);
+            }
+            else
+            {
+                Application.Current.Shutdown();
+                Process.GetCurrentProcess().Kill();
+            }
+
             _window = new ControlWindow();
             _window.Show();
             _window.Hide();
@@ -218,7 +238,7 @@ namespace WPFDirExplorer
 
         public void GenerateGame()
         {
-            string exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string exePath = Directory.GetCurrentDirectory();//Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             string zipPath = exePath + @"\Cases\1.zip";
             GameRefFolder = exePath + @"\Cases\1\";
             System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, GameRefFolder);

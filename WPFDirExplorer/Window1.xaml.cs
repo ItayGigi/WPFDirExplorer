@@ -25,7 +25,7 @@ namespace WPFDirExplorer
 		{
 			InitializeComponent();
 
-            string path = Directory.GetDirectories(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\Cases\1")[0] + @"\StartingClue.txt";
+			string path = ((App)Application.Current).GameRefFolder + ((App)Application.Current).CaseName + @"\StartingClue.txt";
 
 			string text = File.ReadAllText(path);
 			parseToTextBlock(text, textBlock);
@@ -49,8 +49,8 @@ namespace WPFDirExplorer
 						FontWeight = (i % 2 == 1)? FontWeights.Bold : FontWeights.Normal,
 						FontStyle = (j % 2 == 1)? FontStyles.Italic : FontStyles.Normal
 					});
-                }
+				}
 			}
-        }
+		}
 	}
 }

@@ -8,12 +8,13 @@
         Title="ControlWindow" Height="350" Width="350" Background="#FFCEF8FB">
     <Grid>
         <Button x:Name="clueButton" Content="Open Starting Clue" HorizontalAlignment="Center" Margin="0,56,0,0" VerticalAlignment="Top" Height="45" Width="114" Click="Button_Click"/>
-        <Label Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Name="label" Margin="174,25,0,0"/>
+        <TextBlock TextWrapping="Wrap" Margin="10,10,10,278" Name="textBlock"/>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Top" Name="label" Margin="0,10,0,0" HorizontalContentAlignment="Center" Width="330"/>
         <Button x:Name="generateButton" Content="Generate" HorizontalAlignment="Left" Margin="39,275,0,0" VerticalAlignment="Top" Height="38" Width="85" Click="generateButton_Click"/>
         <Button x:Name="quitButton" Content="Quit" HorizontalAlignment="Left" Margin="147,275,0,0" VerticalAlignment="Top" Height="38" Width="85" Click="quitButton_Click"/>
         <Canvas Margin="27,121,19,64" Name="lockedCanvas">
             <Label Content="            File locked.&#xD;&#xA;Please enter your password:" Canvas.Top="7" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Canvas.Left="61"/>
-            <TextBox Canvas.Left="49" Canvas.Top="59" Width="143" HorizontalAlignment="Left" Height="34" MaxLines="1" VerticalContentAlignment="Center" FontSize="14" VerticalAlignment="Center" Name="passwordBox"/>
+            <TextBox Canvas.Left="49" Canvas.Top="59" Width="143" HorizontalAlignment="Left" Height="34" MaxLines="1" VerticalContentAlignment="Center" FontSize="14" VerticalAlignment="Center" Name="passwordBox" PreviewTextInput="NumberValidationTextBox"/>
             <Button x:Name="passwordButton" Content="Enter" Canvas.Left="197" Canvas.Top="59" Height="34" Width="56" HorizontalAlignment="Left" VerticalAlignment="Center" Click="passwordButton_Click"/>
             <Label x:Name="hintLabel" Content="Hint:" Canvas.Left="49" Canvas.Top="98" HorizontalAlignment="Left" VerticalAlignment="Center" Width="204" HorizontalContentAlignment="Center"/>
         </Canvas>

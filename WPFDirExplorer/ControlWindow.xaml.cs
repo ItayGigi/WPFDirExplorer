@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,9 +32,18 @@ namespace WPFDirExplorer
 
 			lockedCanvas.Visibility = Visibility.Hidden;
 			clueButton.Visibility = Visibility.Hidden;
-		}
 
-		private void Button_Click(object sender, RoutedEventArgs e)
+			textBlock.Text = System.IO.Directory.GetCurrentDirectory();
+
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
 		{
 			Window1 window = new Window1();
 			window.Show();
@@ -81,21 +91,36 @@ namespace WPFDirExplorer
 
 		private void passwordButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (_lockedFileContent != null && _lockedFileContent.Length >= 2 && passwordBox.Text == _lockedFileContent[1])
-			{
-                Task.Run(() => { MessageBox.Show("File Unlocked."); });
+            //_lockedFileContent.Contains(passwordBox.Text)
 
-				string dest = _selectedItem.Path.Remove(_selectedItem.Path.Length - " (Locked)".Length);
-                string source = ((App)Application.Current).GameRefFolder + dest.Substring(((App)Application.Current).GameFolder.Length);
-				File.Copy(source, dest);
-				File.Delete(_selectedItem.Path);
-
-				_selectedItem = null;
-			}
-			else
+            if (_lockedFileContent != null && _lockedFileContent.Length >= 2)
 			{
-				Task.Run(() => { MessageBox.Show("Password is incorrect."); });
-			}
+				bool passwordCorrect = false;
+				for (int i = 1; i < _lockedFileContent.Length; i++)
+				{
+					if (passwordBox.Text == _lockedFileContent[i])
+					{
+						passwordCorrect = true;
+						break;
+					}
+				}
+
+				if (passwordCorrect)
+				{
+                    Task.Run(() => { MessageBox.Show("File Unlocked."); });
+
+                    string dest = _selectedItem.Path.Remove(_selectedItem.Path.Length - " (Locked)".Length);
+                    string source = ((App)Application.Current).GameRefFolder + dest.Substring(((App)Application.Current).GameFolder.Length);
+                    File.Copy(source, dest);
+                    File.Delete(_selectedItem.Path);
+
+                    _selectedItem = null;
+                }
+				else
+				{
+                    Task.Run(() => { MessageBox.Show("Password is incorrect."); });
+                }
+            }
 		}
     }
 }
