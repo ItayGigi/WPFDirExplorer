@@ -17,6 +17,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Media3D;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
+using System.Security.AccessControl;
 
 namespace WPFDirExplorer
 {
@@ -260,6 +261,19 @@ namespace WPFDirExplorer
                     File.Delete(path.Remove(path.Length- " (Locked)".Length));
                 }
             }
+        }
+
+        public void Quit()
+        {
+            if (!string.IsNullOrEmpty(GameRefFolder))
+            {
+                Directory.Delete(GameRefFolder, true);
+                try { Directory.Delete(System.IO.Path.Combine(GameFolder, CaseName), true); }
+                catch { }
+            }
+
+            Application.Current.Shutdown();
+            Process.GetCurrentProcess().Kill();
         }
     }
 }

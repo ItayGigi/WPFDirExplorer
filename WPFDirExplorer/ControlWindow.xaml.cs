@@ -80,13 +80,7 @@ namespace WPFDirExplorer
 
 		private void quitButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (!string.IsNullOrEmpty(((App)Application.Current).GameRefFolder))
-			{
-				Directory.Delete(((App)Application.Current).GameRefFolder, true);
-				Directory.Delete(System.IO.Path.Combine(((App)Application.Current).GameFolder, ((App)Application.Current).CaseName), true);
-			}
-			Application.Current.Shutdown();
-			Process.GetCurrentProcess().Kill();
+			((App)Application.Current).Quit();
 		}
 
 		private void passwordButton_Click(object sender, RoutedEventArgs e)

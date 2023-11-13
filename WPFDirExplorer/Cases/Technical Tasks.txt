@@ -1,0 +1,8 @@
+- unlock files with password
+- find files in directories
+- read file properties
+- solve riddles
+- decode cyphers
+- google stuff to find information
+- spectogram
+- qr codes
