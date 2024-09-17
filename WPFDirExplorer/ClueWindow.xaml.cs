@@ -16,18 +16,13 @@ using System.Windows.Shapes;
 
 namespace WPFDirExplorer
 {
-	/// <summary>
-	/// Interaction logic for Window1.xaml
-	/// </summary>
-	public partial class Window1 : Window
+	public partial class ClueWindow : Window
 	{
-		public Window1()
+		public ClueWindow(string cluePath)
 		{
 			InitializeComponent();
 
-			string path = ((App)Application.Current).GameRefFolder + ((App)Application.Current).CaseName + @"\StartingClue.txt";
-
-			string text = File.ReadAllText(path);
+			string text = File.ReadAllText(cluePath);
 			parseToTextBlock(text, textBlock);
 		}
 

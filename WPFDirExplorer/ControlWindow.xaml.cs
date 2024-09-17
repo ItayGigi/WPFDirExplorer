@@ -18,13 +18,10 @@ using Shell32;
 
 namespace WPFDirExplorer
 {
-	/// <summary>
-	/// Interaction logic for ControlWindow.xaml
-	/// </summary>
 	public partial class ControlWindow : Window
 	{
 		string[] _lockedFileContent;
-		FolderItem _selectedItem;
+		FolderItem? _selectedItem;
 
 		public ControlWindow()
 		{
@@ -33,11 +30,10 @@ namespace WPFDirExplorer
 			lockedCanvas.Visibility = Visibility.Hidden;
 			clueButton.Visibility = Visibility.Hidden;
 
-			textBlock.Text = System.IO.Directory.GetCurrentDirectory();
-
+			((App)Application.Current).OnSelectItem += onSelectItem;
         }
 
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        private void numberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
@@ -45,29 +41,25 @@ namespace WPFDirExplorer
 
         private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			Window1 window = new Window1();
+			ClueWindow window = new ClueWindow(((App)Application.Current).GameRefFolder + ((App)Application.Current).CaseName + @"\StartingClue.txt");
 			window.Show();
 			window.Title = "Starting Clue";
 		}
 
-		public void OnSelectItem(FolderItem item)
+		private void onSelectItem(FolderItem? item)
 		{
 			_selectedItem = item;
-			if (item == null)
-			{
-				lockedCanvas.Visibility = Visibility.Hidden;
+
+            lockedCanvas.Visibility = Visibility.Hidden;
+
+            if (item == null)
 				return;
-			}
 
 			if (item.Type == "File" && item.Name.EndsWith(" (Locked)"))
 			{
 				lockedCanvas.Visibility = Visibility.Visible;
 				_lockedFileContent = File.ReadAllLines(((App)Application.Current).GameRefFolder + item.Path.Substring(((App)Application.Current).GameFolder.Length));
 				hintLabel.Content = "Saved hint: " + _lockedFileContent[0];
-			}
-			else
-			{
-				lockedCanvas.Visibility = Visibility.Hidden;
 			}
 		}
 
@@ -85,36 +77,26 @@ namespace WPFDirExplorer
 
 		private void passwordButton_Click(object sender, RoutedEventArgs e)
 		{
-            //_lockedFileContent.Contains(passwordBox.Text)
+			if (_lockedFileContent == null || _lockedFileContent.Length < 2) return;
 
-            if (_lockedFileContent != null && _lockedFileContent.Length >= 2)
+			for (int i = 1; i < _lockedFileContent.Length; i++)
 			{
-				bool passwordCorrect = false;
-				for (int i = 1; i < _lockedFileContent.Length; i++)
-				{
-					if (passwordBox.Text == _lockedFileContent[i])
-					{
-						passwordCorrect = true;
-						break;
-					}
-				}
-
-				if (passwordCorrect)
+				if (passwordBox.Text == _lockedFileContent[i]) // match
 				{
                     Task.Run(() => { MessageBox.Show("File Unlocked."); });
 
                     string dest = _selectedItem.Path.Remove(_selectedItem.Path.Length - " (Locked)".Length);
                     string source = ((App)Application.Current).GameRefFolder + dest.Substring(((App)Application.Current).GameFolder.Length);
                     File.Copy(source, dest);
-                    File.Delete(_selectedItem.Path);
 
+                    File.Delete(_selectedItem.Path);
                     _selectedItem = null;
-                }
-				else
-				{
-                    Task.Run(() => { MessageBox.Show("Password is incorrect."); });
-                }
-            }
+
+					return;
+				}
+			}
+
+            Task.Run(() => { MessageBox.Show("Password is incorrect."); });
 		}
     }
 }

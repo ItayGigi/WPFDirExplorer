@@ -5,27 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFDirExplorer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="362" Width="394">
-    <Window.Background>
-        <SolidColorBrush Opacity="1" Color="#FFFFBFBF"/>
-    </Window.Background>
-
+        Title="Directory Explorer" Topmost="True" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
     <Grid>
-        <ListView d:ItemsSource="{d:SampleData ItemCount=5}" Margin="39,52,42,52" Name="listView" Background="#FFBDFFB4">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <Image HorizontalAlignment="Left" Height="100" Margin="571,166,0,0" VerticalAlignment="Top" Width="100">
-            <Image.OpacityMask>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="Black"/>
-                    <GradientStop Color="White" Offset="1"/>
-                </LinearGradientBrush>
-            </Image.OpacityMask>
-        </Image>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="92,21,0,0" VerticalAlignment="Top" Name="label"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Content="Directory Explorer is currently running." Padding="5,5,5,5" Margin="10,0,10,0" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="folderText" TextWrapping="Wrap" Text="Game folder:" Grid.Row="1" Margin="10,0,10,0" Padding="5,5,5,5" MaxWidth="220" Grid.ColumnSpan="2"/>
+        <Button Content="Quit" Click="quitClick" HorizontalAlignment="Center" Width="90" Grid.Row="2" VerticalAlignment="Center" Margin="10,5,10,10" Grid.Column="1"/>
+        <Button Content="Open" Click="openClick" HorizontalAlignment="Center" Width="90" Grid.Row="2" VerticalAlignment="Center" Margin="10,5,10,10" Grid.Column="0"/>
+
     </Grid>
 </Window>
