@@ -130,7 +130,7 @@ namespace WPFDirExplorer
                 }
                 catch (Exception ex)
                 {
-                    Task.Run(() => { MessageBox.Show(ex.Message); });
+                    //Task.Run(() => { MessageBox.Show(ex.Message); });
                     continue;
                 }
             }
