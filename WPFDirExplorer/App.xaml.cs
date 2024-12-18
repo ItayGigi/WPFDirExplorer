@@ -102,8 +102,7 @@ namespace WPFDirExplorer
                 {
                     _explorerWindow = scanExplorers(_explorerWindow);
 
-                    if (_explorerWindow == null) continue;
-                    if (_explorerWindow.Document == null) continue;
+                    if (_explorerWindow == null || _explorerWindow.Document == null) continue;
 
                     // handle explorer resize
                     if (_explorerWindow.Width != lastSize.X || _explorerWindow.Height != lastSize.Y)
@@ -159,8 +158,8 @@ namespace WPFDirExplorer
 
                 if (currExplorer == null) // new match
                 {
-                    gameWindow.OnQuit += explorerOnQuit;
-                    gameWindow.NavigateComplete2 += explorerOnNavigate;
+                    gameWindow.OnQuit += gameExplorerOnQuit;
+                    gameWindow.NavigateComplete2 += gameExplorerOnNavigate;
 
                     Dispatcher.Invoke(() =>
                     {
@@ -174,7 +173,7 @@ namespace WPFDirExplorer
             return gameWindow;
         }
 
-        void explorerOnQuit()
+        void gameExplorerOnQuit()
         {
             _explorerWindow = null;
 
@@ -185,14 +184,14 @@ namespace WPFDirExplorer
             });
         }
 
-        void explorerOnNavigate([MarshalAs(UnmanagedType.IDispatch)] object pDisp, [MarshalAs(UnmanagedType.Struct)] ref object URL)
+        void gameExplorerOnNavigate([MarshalAs(UnmanagedType.IDispatch)] object pDisp, [MarshalAs(UnmanagedType.Struct)] ref object URL)
         {
             if (URL.ToString() == null || !URL.ToString().StartsWith(GameFolder)) // no longer in game folder
             {
-                _explorerWindow.OnQuit -= explorerOnQuit;
-                _explorerWindow.NavigateComplete2 -= explorerOnNavigate;
+                _explorerWindow.OnQuit -= gameExplorerOnQuit;
+                _explorerWindow.NavigateComplete2 -= gameExplorerOnNavigate;
 
-                explorerOnQuit();
+                gameExplorerOnQuit();
 
                 return;
             }
